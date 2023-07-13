@@ -1,6 +1,7 @@
 package com.example.tanerworking1.controller;
 
 
+import com.example.tanerworking1.exceptions.DataNotFoundInDB;
 import com.example.tanerworking1.model.dto.PersonDTO;
 import com.example.tanerworking1.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,20 +37,27 @@ public class PersonController {
     }
 
     @GetMapping("/getPersonById/{id}")  // Tek bir kişi bilgisini getir
-    public PersonDTO getPersonById(@PathVariable Long id){
-        return this.personService.getPersonById(id);
+    public ResponseEntity<?> getPersonById(@PathVariable Long id){
+        try{
+            return new ResponseEntity<>(this.personService.getPersonById(id),HttpStatus.OK);
+        }catch(DataNotFoundInDB db){
+            return new ResponseEntity<>(db.getErrorMessage(),HttpStatus.NOT_FOUND);
+        }
     }
-
 
     @PutMapping("/updateTC") // TC değişikliği
     public void updateTC(@RequestParam String oldTC, @RequestParam String newTC){
         this.personService.updateTC(oldTC,newTC);
     }
 
-    @DeleteMapping("/deletePerson/{id}") //id ile kişiyi tablodan sil
-    public  ResponseEntity deletePerson(@PathVariable Long id){
-        this.personService.deletePerson(id);
-        return new ResponseEntity("BASARILI",HttpStatus.ACCEPTED);
+    @DeleteMapping("/deletePerson") //tc ile kişiyi tablodan sil
+    public  ResponseEntity<?> deletePerson(@RequestParam String tc){
+        try{
+            this.personService.deletePerson(tc);
+            return new ResponseEntity<>("BASARILI",HttpStatus.ACCEPTED);
+        }catch(DataNotFoundInDB e){
+            return new ResponseEntity<>(e,HttpStatus.NOT_FOUND);
+        }
     }
 
 }

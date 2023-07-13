@@ -13,5 +13,5 @@ public interface PersonService {
     List<PersonDTO> getPersons();
     void updateTC(String oldTC, String newTC);
     PersonDTO getPersonById(Long id);
-    void deletePerson(Long id);
+    void deletePerson(String tc);
 }

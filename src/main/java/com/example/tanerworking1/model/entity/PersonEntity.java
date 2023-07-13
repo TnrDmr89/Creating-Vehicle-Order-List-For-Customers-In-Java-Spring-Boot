@@ -17,7 +17,7 @@ public class PersonEntity extends BaseEntity {
     private int personAge;
     @Column(name="tc")
     private String personTC;
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name="car_id")
     private CarEntity ownerCar;
 
